@@ -1,7 +1,12 @@
 from django.shortcuts import render
-from student.model import user_data
-# Create your views here.
+from student.models import user_data
 from django.shortcuts import render
+from rest_framework import status
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
+from .models import user_data
+
+
 
 def signup(request):
     if request.method == 'POST':
@@ -50,3 +55,12 @@ def login(request):
             return render(request, 'login.html', {'error_message': error_message})
     else:
         return render(request, 'login.html')
+
+@api_view(['post'])
+def adduser(request):
+    print("\nrequest:",request,"\nrequest.method:",request.method,"\nrequest.data:",request.data)
+    print("\n email:",request.data["email"])
+    m=user_data(email=request.data["email"],password=request.data["password"],confirm_password=request.data["confirm_password"],age=request.data["age"],gender=request.data["gender"],studying_year=request.data["studying_year"],DateofBirth=request.data["dob"])
+    m.save()
+    return render(request, 'login.html')
+
